@@ -4,6 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 require("./database");
 function main() {
     app_1.default.listen(app_1.default.get('port'));
