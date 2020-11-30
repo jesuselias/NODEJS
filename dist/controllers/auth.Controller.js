@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.profile = exports.signin = exports.signup = void 0;
+exports.testing = exports.profile = exports.signin = exports.signup = void 0;
 const User_1 = __importDefault(require("../models/User"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -29,13 +29,28 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.header('auth-token', token).json(savedUser);
 });
 exports.signup = signup;
-const signin = (req, res) => {
-    console.log(req.body);
-    res.send('signin');
-};
+const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield User_1.default.findOne({ email: req.body.email });
+    if (!user)
+        return res.status(400).json('Email or password is wrong');
+    const correctPassword = yield user.validatePassword(req.body.password);
+    if (!correctPassword)
+        return res.status(400).json('invalid Password');
+    const token = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.TOKEN_SECRET || 'tokentest', {
+        expiresIn: 60 * 60 * 24
+    });
+    res.header('auth-token', token).json(user);
+});
 exports.signin = signin;
-const profile = (req, res) => {
-    res.send('profile');
-};
+const profile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield User_1.default.findById(req.userId, { password: 0 });
+    if (!user)
+        return res.status(404).json('No User found');
+    res.json(user);
+});
 exports.profile = profile;
+const testing = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.json('private');
+});
+exports.testing = testing;
 //# sourceMappingURL=auth.Controller.js.map

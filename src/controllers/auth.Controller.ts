@@ -15,14 +15,31 @@ export const signup = async (req:Request, res: Response) => {
     //token
     const token: string = jwt.sign({ id: savedUser._id}, process.env.TOKEN_SECRET || 'tokentest' )
 
+    
     res.header('auth-token', token ).json(savedUser);
 }
 
-export const signin = (req:Request, res: Response) => {
-    console.log(req.body);
-    res.send('signin');
+export const signin = async (req:Request, res: Response) => {
+    
+    const user = await User.findOne({email: req.body.email});
+    if(!user) return res.status(400).json('Email or password is wrong');
+
+    const correctPassword: boolean = await user.validatePassword(req.body.password);
+    if(!correctPassword) return res.status(400).json('invalid Password')
+
+    const token = jwt.sign({_id:user._id}, process.env.TOKEN_SECRET || 'tokentest',{
+        expiresIn: 60 * 60 * 24
+    })
+    res.header('auth-token', token).json(user);
 }
 
-export const profile = (req:Request, res: Response) => {
-    res.send('profile');
+export const profile = async (req: Request, res: Response) => {
+    const user = await User.findById(req.userId, { password: 0});
+    if(!user) return res.status(404).json('No User found');
+    res.json(user);
+    
+}
+
+export const testing = async (req: Request, res: Response)=> {
+    res.json('private')
 }
