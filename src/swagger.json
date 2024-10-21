@@ -24,7 +24,15 @@
                 "summary" : "Get all the tasks",
                 "description": "Get all the tasks",
                 "produces": ["application/json"],
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "auth-token",
+                        "in": "header",
+                        "description": "Authentication token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "successful operation",

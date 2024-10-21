@@ -26,7 +26,9 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const savedUser = yield user.save();
     //token
     const token = jsonwebtoken_1.default.sign({ id: savedUser._id }, process.env.TOKEN_SECRET || 'tokentest');
+    console.log("token", token);
     res.header('auth-token', token).json(savedUser);
+    console.log('auth-token', token);
 });
 exports.signup = signup;
 const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -39,11 +41,14 @@ const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const token = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.TOKEN_SECRET || 'tokentest', {
         expiresIn: 60 * 60 * 24
     });
+    console.log("token", token);
     res.header('auth-token', token).json(user);
 });
 exports.signin = signin;
 const profile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("req", req.userId);
     const user = yield User_1.default.findById(req.userId, { password: 0 });
+    console.log("user", user);
     if (!user)
         return res.status(404).json('No User found');
     res.json(user);

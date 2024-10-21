@@ -33,15 +33,21 @@ const userSchema = new mongoose_1.Schema({
     }
 });
 //function flecha
-userSchema.methods.encryptPassword = (password) => __awaiter(void 0, void 0, void 0, function* () {
-    const salt = yield bcryptjs_1.default.genSalt(10);
-    return bcryptjs_1.default.hash(password, salt);
-});
+// Método para encriptar la contraseña
+userSchema.methods.encryptPassword = function (password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!password) {
+            throw new Error("Password no puede estar vacío o undefined");
+        }
+        const salt = yield bcryptjs_1.default.genSalt(10);
+        return bcryptjs_1.default.hash(password, salt);
+    });
+};
 //function ECMA5
 userSchema.methods.validatePassword = function (password) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield bcryptjs_1.default.compare(password, this.password);
+        return yield bcryptjs_1.default.compare(password, this.get('password'));
     });
 };
-exports.default = mongoose_1.model('User', userSchema);
+exports.default = (0, mongoose_1.model)('User', userSchema);
 //# sourceMappingURL=User.js.map

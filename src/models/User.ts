@@ -12,9 +12,9 @@ export interface IUser extends Document {
 const userSchema = new Schema({
     username: {
         type: String,
-        required:true,
+        required: true,
         min: 4,
-        lowercase:true
+        lowercase: true
     },
     email: {
         type: String,
@@ -25,18 +25,21 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true
-
     }
 });
 //function flecha
-userSchema.methods.encryptPassword = async (password: string): Promise<string> => {
+// Método para encriptar la contraseña
+userSchema.methods.encryptPassword = async function (password: string): Promise<string> {
+    if (!password) {
+        throw new Error("Password no puede estar vacío o undefined");
+    }
     const salt = await bcrypt.genSalt(10);
-    return bcrypt.hash(password,salt);
+    return bcrypt.hash(password, salt);
 };
 
 //function ECMA5
 userSchema.methods.validatePassword = async function (password: string): Promise<boolean> {
-    return await bcrypt.compare(password, this.password);
+    return await bcrypt.compare(password, this.get('password'));
 };
 
 export default model<IUser>('User' , userSchema);
