@@ -49,5 +49,5 @@ userSchema.methods.validatePassword = function (password) {
         return yield bcryptjs_1.default.compare(password, this.get('password'));
     });
 };
-exports.default = (0, mongoose_1.model)('User', userSchema);
+exports.default = mongoose_1.model('User', userSchema);
 //# sourceMappingURL=User.js.map

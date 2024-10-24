@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const router = (0, express_1.Router)();
+const router = express_1.Router();
 const verifyToken_1 = require("../libs/verifyToken");
 const auth_Controller_1 = require("../controllers/auth.Controller");
 router.post('/signup', auth_Controller_1.signup);
