@@ -1,5 +1,5 @@
 #Node
 
-con TS TyoeScript 
+TS TypeScript 
 
 
